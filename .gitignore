@@ -1,0 +1,35 @@
+# PHP y archivos temporales
+*.php~
+*.phtml
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Base de datos
+*.sql.bak
+*.dump
+*.db.backup
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.sublime-settings
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# XAMPP/Local
+config/db_local.php
+.env
+.env.local
+
+# Node
+node_modules/
+package-lock.json
+
+# Compilados
+*.css.map
