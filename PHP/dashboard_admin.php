@@ -30,7 +30,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 3) {
         <p>Has iniciado sesión correctamente con el RUT: <strong><?php echo htmlspecialchars($_SESSION['rut']); ?></strong></p>
         
         <p>Desde aquí podrás gestionar centros médicos, personal y especialidades.</p>
-
+        <p>
+            <a href="centros.php">Gestionar centros médicos</a>
+        </p>
         <!-- Botón para cerrar sesión -->
         <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
     </div>
