@@ -21,6 +21,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
         <h1>Bienvenido, Doctor/a</h1>
         <p>RUT: <strong><?php echo htmlspecialchars($_SESSION['rut']); ?></strong></p>
         <p>Desde aquí podrás ver tu agenda y registrar atenciones.</p>
+        <p>
+            <a href="agenda.php">Ver mi agenda</a>
+        </p>
         <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
     </div>
 </body>
