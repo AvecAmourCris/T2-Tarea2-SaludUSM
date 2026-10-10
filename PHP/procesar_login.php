@@ -5,7 +5,7 @@ require_once 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rut = trim($_POST['rut']);
-    $password = trim($_POST['password']);
+    $password = $_POST['password'] ?? '';
     
     $sql = "SELECT ID_Usuario, RUT, Password_Hash, ID_Rol FROM Usuario WHERE RUT = :rut";
             
@@ -16,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $usuario = $stmt->fetch();
         
-        if ($usuario && $password === $usuario['Password_Hash']) {
+        if ($usuario && password_verify($password, $usuario['Password_Hash'])) {
+            session_regenerate_id(true); 
             
             $_SESSION['id_usuario'] = $usuario['ID_Usuario'];
             $_SESSION['rut'] = $usuario['RUT'];
