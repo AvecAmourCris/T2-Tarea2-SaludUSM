@@ -52,7 +52,9 @@ function mostrarCabecera(string $titulo): void {
         unset($_SESSION['aviso_general']);
     }
 }
-function mostrarPie(): void { echo '</main><footer>SaludUSM · Proyecto académico INF-239</footer></body></html>'; }
+function mostrarPie(): void {
+    echo '</main></body></html>';
+}
 function salidaError(Throwable $e): string {
     if ($e instanceof RuntimeException) { return $e->getMessage(); }
     error_log($e->getMessage());

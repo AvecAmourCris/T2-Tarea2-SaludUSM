@@ -2,6 +2,7 @@
 
 **Integrantes:** 
 - Sofía Alarcón, 202473523-3
+- Cristóbal Uteau, 202473629-9
 
 ## Requisitos
 
