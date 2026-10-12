@@ -280,6 +280,12 @@ INSERT INTO Usuario (RUT, Password_Hash, ID_Rol) VALUES
     ('8247016-6', '$2b$10$eFAgOwNDQeokwiJBSkk2ZOs3Hhcm.9CGVQfrdbcEU9RjaqCViVnMy', 1),
     ('8398481-3', '$2b$10$bGCAx7HK5McRikb9r6bJwenMRH/cSpEsmB/rEps2SO5ElWoYvxW36', 1);
 
+-- Accesos demostrativos para la defensa (contraseña: DemoUSM2026!).
+-- Solo estas tres cuentas reciben contraseña conocida; el resto conserva su hash original.
+-- Reimportar este script BORRA los datos de la base existente.
+UPDATE Usuario SET Password_Hash = '$2y$12$zdWJsV4Vtf2OHTdEfYz5duZCStZGLHUln7UfohvmcRtSLwk159w4e'
+WHERE RUT IN ('11111111-1', '9873251-9', '8539253-0');
+
 -- 40 pacientes
 INSERT INTO Paciente (RUT_Paciente, Nombre_Completo, Fecha_Nacimiento, Sexo, Telefono, Email, ID_Comuna_Residencia, ID_Prevision) VALUES
     ('8539253-0', 'Emilia Martínez Reyes', '2000-05-03', 'F', '+56947763270', 'emilia.martinez@mail.com', 7, 1),
@@ -802,6 +808,26 @@ INSERT INTO Receta (Medicamento, Dosis, Dias_Tratamiento, ID_Atencion) VALUES
 ('Enalapril 10mg', '5 mg cada 12 horas', 7, 65),
 ('Amoxicilina + Ácido Clavulánico 875mg', '1 aplicación cada 8 horas si hay dolor', 5, 65);
 
+
+-- Citas de demostración futuras para probar los tres roles.
+-- El médico 9873251-9 atiende en dos centros y tiene tres especialidades.
+-- Próximo lunes (independiente de la fecha en que se importe el SQL).
+INSERT INTO Cita (Fecha_Hora, RUT_Paciente, RUT_Medico, Codigo_Centro, ID_Especialidad, ID_Estado_Cita)
+SELECT TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL (7-WEEKDAY(CURDATE())) DAY), '09:00:00'),
+       '8539253-0', '9873251-9', 'CM-STG-01', 11,
+       (SELECT ID_Estado_Cita FROM Estado_Cita WHERE Nombre='Reservada')
+WHERE NOT EXISTS (
+ SELECT 1 FROM Cita WHERE RUT_Medico='9873251-9'
+ AND Fecha_Hora=TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL (7-WEEKDAY(CURDATE())) DAY), '09:00:00')
+);
+INSERT INTO Cita (Fecha_Hora, RUT_Paciente, RUT_Medico, Codigo_Centro, ID_Especialidad, ID_Estado_Cita)
+SELECT TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL (7-WEEKDAY(CURDATE())) DAY), '09:30:00'),
+       '8836544-5', '9873251-9', 'CM-VIN-01', 9,
+       (SELECT ID_Estado_Cita FROM Estado_Cita WHERE Nombre='Confirmada')
+WHERE NOT EXISTS (
+ SELECT 1 FROM Cita WHERE RUT_Medico='9873251-9'
+ AND Fecha_Hora=TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL (7-WEEKDAY(CURDATE())) DAY), '09:30:00')
+);
 
 -- ============================================================
 -- FUNCIONES

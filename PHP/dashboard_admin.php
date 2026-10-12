@@ -36,6 +36,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 3) {
         <p>
             <a href="medicos.php">Gestionar médicos</a>
         </p>
+        <p>
+            <a href="agenda.php">Ver mi agenda</a>
+        </p>
         <!-- Botón para cerrar sesión -->
         <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
     </div>

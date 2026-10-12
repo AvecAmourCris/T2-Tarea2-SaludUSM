@@ -3,11 +3,15 @@ session_start();
 date_default_timezone_set('America/Santiago');
 
 if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
-    header('Location: ../login.php');
+    header('Location: login.php');
     exit;
 }
 
 require_once __DIR__ . '/db.php';
+
+// Actualiza las reservas vencidas incluso si se ingresa directamente a la agenda.
+$vencidas = $pdo->query('CALL sp_cancelar_citas_vencidas(@canceladas)');
+$vencidas->closeCursor();
 
 function escapar($texto) {
     return htmlspecialchars((string) $texto, ENT_QUOTES, 'UTF-8');
@@ -189,7 +193,7 @@ $citas = $consulta->fetchAll();
 <body>
 <main>
     <nav>
-        <a href="dashboard_medico.php">Volver al panel</a>
+        <a href="dashboard_medico.php">Volver al panel</a> · <a href="atenciones.php">Registrar atenciones</a> · <a href="historial.php">Historial clínico</a>
     </nav>
 
     <h1>Mi agenda</h1>
@@ -224,7 +228,7 @@ $citas = $consulta->fetchAll();
                     <th>Especialidad</th>
                     <th>Centro</th>
                     <th>Estado</th>
-                    <th>Cambiar estado</th>
+                    <th>Cambiar estado</th><th>Atención</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -272,12 +276,17 @@ $citas = $consulta->fetchAll();
                                 Cita cancelada
                             <?php endif; ?>
                         </td>
+                        <td>
+                           <?php if ($cita['Estado'] === 'Atendida'): ?>
+                             <a href="atenciones.php?id_cita=<?= (int)$cita['ID_Cita'] ?>">Ver ficha / registrar atención</a>
+                           <?php else: ?>- <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
 
                 <?php if (!$citas): ?>
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8">
                             No tienes citas para este día.
                         </td>
                     </tr>

@@ -1,30 +1,11 @@
 <?php
-session_start();
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once __DIR__ . '/comun.php';
+exigirRol([2]);
+actualizarVencidas($pdo);
+$q=$pdo->prepare('SELECT COUNT(*) FROM Cita WHERE RUT_Medico=? AND DATE(Fecha_Hora)=CURDATE()'); $q->execute([rutActual()]); $hoy=(int)$q->fetchColumn();
+$q=$pdo->prepare('SELECT Nombre_Completo FROM Medico WHERE RUT_Medico=?'); $q->execute([rutActual()]); $nombre=$q->fetchColumn();
+mostrarCabecera('Portal del médico');
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel Médico</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { background-color: white; padding: 20px; border-radius: 8px; max-width: 800px; margin: auto; }
-        .logout-btn { padding: 10px 15px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 20px;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Bienvenido, Doctor/a</h1>
-        <p>RUT: <strong><?php echo htmlspecialchars($_SESSION['rut']); ?></strong></p>
-        <p>Desde aquí podrás ver tu agenda y registrar atenciones.</p>
-        <p>
-            <a href="agenda.php">Ver mi agenda</a>
-        </p>
-        <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
-    </div>
-</body>
-</html>
+<p>Bienvenido/a, <strong><?=e($nombre)?></strong>. RUT <?=e(rutActual())?>.</p>
+<div class="grid"><div class="card"><span class="muted">Citas del día</span><div class="num"><?=e($hoy)?></div></div><div class="card"><h2>Agenda</h2><p>Consulta las citas de cada día y actualiza su estado.</p><a class="btn" href="agenda.php">Ver agenda</a></div><div class="card"><h2>Atenciones</h2><p>Registra y edita fichas de atención, diagnósticos y recetas.</p><a class="btn" href="atenciones.php">Gestionar atenciones</a></div><div class="card"><h2>Historial clínico</h2><p>Revisa el historial de tus pacientes sin modificar registros ajenos.</p><a class="btn" href="historial.php">Ver historial</a></div></div>
+<?php mostrarPie(); ?>

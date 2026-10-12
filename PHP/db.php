@@ -3,8 +3,8 @@
 
 $host = 'localhost';
 $dbname = 'salud_usm';
-$user = 'root'; // Usuario por defecto en XAMPP
-$pass = '';     // Contraseña por defecto en XAMPP Mac (déjalo vacío)
+$user = 'salud_app';
+$pass = 'SaludUSM_Local2026!';
 
 try {
     // Configuración DSN (Data Source Name) con codificación UTF-8 para las tildes

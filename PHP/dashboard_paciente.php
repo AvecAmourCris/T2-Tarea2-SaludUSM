@@ -1,27 +1,12 @@
 <?php
-session_start();
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once __DIR__ . '/comun.php';
+exigirRol([1]);
+actualizarVencidas($pdo);
+$q=$pdo->prepare('SELECT Nombre_Completo FROM Paciente WHERE RUT_Paciente=?'); $q->execute([rutActual()]); $nombre=$q->fetchColumn();
+$q=$pdo->prepare("SELECT COUNT(*) FROM Cita c JOIN Estado_Cita e ON e.ID_Estado_Cita=c.ID_Estado_Cita WHERE c.RUT_Paciente=? AND c.Fecha_Hora>=NOW() AND e.Nombre IN ('Reservada','Confirmada')");
+$q->execute([rutActual()]); $proximas=(int)$q->fetchColumn();
+mostrarCabecera('Portal del paciente');
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Portal del Paciente</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { background-color: white; padding: 20px; border-radius: 8px; max-width: 800px; margin: auto; }
-        .logout-btn { padding: 10px 15px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-top: 20px;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Portal del Paciente</h1>
-        <p>RUT: <strong><?php echo htmlspecialchars($_SESSION['rut']); ?></strong></p>
-        <p>Desde aquí podrás buscar médicos y agendar tus horas.</p>
-        <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
-    </div>
-</body>
-</html>
+<p>Bienvenido/a, <strong><?=e($nombre)?></strong>. ¿En qué podemos ayudarte?</p>
+<div class="grid"><div class="card"><span class="muted">Próximas citas</span><div class="num"><?=e($proximas)?></div><a href="mis_citas.php">Revisar mis citas</a></div><div class="card"><h2>Buscar especialistas</h2><form action="buscar_medicos.php" method="get" class="row"><div class="field"><input name="q" placeholder="Nombre o especialidad" aria-label="Buscar médico"></div><button>Buscar</button></form></div><div class="card"><h2>Reservar hora</h2><p>Encuentra un bloque disponible y confirma tu reserva.</p><a class="btn" href="agendar.php">Agendar</a></div><div class="card"><h2>Historial clínico</h2><p>Consulta tus atenciones, diagnósticos y recetas.</p><a class="btn" href="historial.php">Ver historial</a></div></div>
+<?php mostrarPie(); ?>

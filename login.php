@@ -66,7 +66,6 @@
     <div class="login-box">
         <h2>Bienvenido</h2>
         
-        <!-- El formulario enviará los datos por método POST (oculto) al archivo procesar_login.php -->
         <form action="PHP/procesar_login.php" method="POST">
             <label for="rut">RUT</label>
             <input type="text" id="rut" name="rut" placeholder="Ej: 12345678-9" required>
@@ -76,6 +75,10 @@
             
             <button type="submit">Ingresar</button>
         </form>
+        <p>
+            ¿No tienes cuenta?
+        <a href="PHP/registro.php">Regístrate como paciente</a>
+        </p>
     </div>
 
 </body>
